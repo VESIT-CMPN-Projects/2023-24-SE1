@@ -1,39 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase-config';
-const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfUGEmlkfvP-e8EFRJUW8TO-53PzMQXUFjqRm8UDLYdmcw0Mw/viewform?usp=sf_link';
-
+import CertificateGenerator from './CertificateGenerator';
 
 const StudentCertificate = ({ onClose }) => {
   const [students, setStudents] = useState([]);
   const [selectedDivision, setSelectedDivision] = useState('');
-
-  const submitToGoogleForm = async (name, division) => {
-    try {
-      const formData = new FormData();
-      formData.append('entry.T2Ybvb8', name); // Replace with your Google Form field IDs
-      formData.append('entry.T2Ybvb6', division); // Replace with your Google Form field IDs
-
-      await fetch(GOOGLE_FORM_URL, {
-        method: 'POST',
-        body: formData,
-        mode: 'no-cors', // You might need to adjust CORS settings on your form
-      });
-
-      console.log('Data submitted successfully');
-    } catch (error) {
-      console.error('Error submitting data to Google Form: ', error);
-    }
-  };
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         let query = db.collection('Student');
-  
+
         if (selectedDivision !== '') {
           query = query.where('Division', '==', selectedDivision);
         }
-        query = query.where('Standard', '==', '10'); 
+        query = query.where('Standard', '==', '10');
         const snapshot = await query.get();
         const studentData = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -43,10 +25,19 @@ const StudentCertificate = ({ onClose }) => {
       } catch (error) {
         console.error('Error fetching students: ', error);
       }
-    }; 
+    };
     fetchStudents();
   }, [selectedDivision]);
-  
+
+  const generateCertificate = async (name, division) => {
+    try {
+      console.log('Generating certificate...');
+      const student = students.find(student => student.Name === name && student.Division === division);
+      setSelectedStudent(student);
+    } catch (error) {
+      console.error('Error generating certificate: ', error);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-gray-800">
@@ -81,7 +72,7 @@ const StudentCertificate = ({ onClose }) => {
             <th className="p-2">RollNo</th>
             <th className="p-2">Gender</th>
             <th className="p-2">BirthDate</th>
-            <th className="p-2">Category</th>           
+            <th className="p-2">Category</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
@@ -95,14 +86,11 @@ const StudentCertificate = ({ onClose }) => {
               <td className="p-2 text-center">{student.RollNo}</td>
               <td className="p-2 text-center">{student.Gender}</td>
               <td className="p-2 text-center">{student.BirthDate}</td>
-              <td className="p-2 text-center">{student.Category}</td>              
-              <td className='p-2 text-center'>
+              <td className="p-2 text-center">{student.Category}</td>
+              <td className="p-2 text-center">
                 <button
-                  className="bg-blue-500 text-white px-4 rounded hover:bg-blue-700"
-                  onClick={() => {
-                    submitToGoogleForm(student.Name, student.Division);
-                    console.log('Generate Certificate for: ', student.Name);
-                  }}
+                  className="bg-blue-500 text-white px-4 rounded hover:bg-blue-700 mr-2"
+                  onClick={() => generateCertificate(student.Name, student.Division)}
                 >
                   Generate Certificate
                 </button>
@@ -111,10 +99,15 @@ const StudentCertificate = ({ onClose }) => {
           ))}
         </tbody>
       </table>
+      {selectedStudent && (
+        <CertificateGenerator
+          name={selectedStudent.Name}
+          division={selectedStudent.Division}
+          onClose={() => setSelectedStudent(null)}
+        />
+      )}
     </div>
   );
 };
 
-
 export default StudentCertificate;
-

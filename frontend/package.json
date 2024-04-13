@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://docs.google.com/",
   "dependencies": {
     "@craco/craco": "^7.1.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -9,6 +10,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.24.0",
     "firebase": "^10.8.0",
+    "html-to-image": "^1.11.11",
+    "html2canvas": "^1.4.1",
     "postcss": "^8.4.33",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

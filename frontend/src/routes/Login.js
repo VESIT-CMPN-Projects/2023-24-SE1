@@ -20,6 +20,16 @@ const LoginComponent = () => {
         }
     }
 
+    const handleForgotPassword = async () => {
+        try {
+            await auth.sendPasswordResetEmail(email);
+            alert('Password reset email sent. Please check your inbox.');
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+
     return (
         <div className="fullpage h-max bg-blue-100">
             <div className="fullpage w-full h-max bg-blue-100">
@@ -52,7 +62,7 @@ const LoginComponent = () => {
                             </button>
                             <button
                                 className="w-full h-10 px-3 mb-2 text-base font-bold text-white transition duration-500 ease-in-out transform bg-blue-500 rounded-lg hover:bg-blue-600 hover:to-translate-x-1 active:translate-x-2 focus:shadow-outline focus:outline-none"
-                                type="submit"
+                                type="submit" onClick={handleForgotPassword}
                             >
                                 Forgot Password?
                             </button>

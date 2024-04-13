@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase-config';
 import TeacherForm from "../components/TeacherForm";
 import TeacherList from "../components/TeacherList";
-import StudentCertificate from "../components/StudentCertificate";
+// import StudentCertificate from "../components/StudentCertificate";
 
 const DashboardComponent = () => {
   const [isStudentFormOpen, setStudentFormOpen] = useState(false);
@@ -21,7 +21,7 @@ const DashboardComponent = () => {
   const [selectedNoticeId, setSelectedNoticeId] = useState(null);
   const [isTeacherFormOpen, setTeacherFormOpen] = useState(false);
   const [isTeacherListOpen, setTeacherListOpen] = useState(false);
-  const [showLeavingCertificate, setShowLeavingCertificate] = useState(false);
+  // const [showLeavingCertificate, setShowLeavingCertificate] = useState(false);
   const [notices, setNotices] = useState([]);
   const history = useNavigate();
 
@@ -54,9 +54,9 @@ const DashboardComponent = () => {
     setTeacherListOpen(true);
   };
 
-  const toggleLeavingCertificateModal = () => {
-    setShowLeavingCertificate(!showLeavingCertificate);
-  };
+  // const toggleLeavingCertificateModal = () => {
+  //   setShowLeavingCertificate(!showLeavingCertificate);
+  // };
 
   const handleLogOutClick = () => {
     history('/Login');
@@ -197,12 +197,12 @@ const DashboardComponent = () => {
           >
             Manage Teachers
           </button>
-          <button
+          {/* <button
             className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
             onClick={() => setShowLeavingCertificate(true)} // Trigger leaving certificate modal
           >
             Leaving Certificates
-          </button>
+          </button> */}
         </div>
         <div className="w-4/5 p-4 h-full">
           {isStudentFormOpen && <StudentForm onClose={handleCloseStudentForm} />}
@@ -345,9 +345,9 @@ const DashboardComponent = () => {
               {isTeacherListOpen && (
                 <TeacherList onClose={() => setTeacherListOpen(false)} />
               )}
-              {showLeavingCertificate && ( 
+              {/* {showLeavingCertificate && ( 
                 <StudentCertificate onClose={toggleLeavingCertificateModal} />
-              )}
+              )} */}
         </div>
       </div>
     </div>
